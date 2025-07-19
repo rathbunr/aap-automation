@@ -1,0 +1,53 @@
+- name: Upload collections to Automation Hub remotes
+  hosts: localhost
+  gather_facts: false
+  collections:
+    - ansible.hub
+
+  vars:
+    hub_url: "https://your-hub-hostname"
+    api_token: "{{ your_hub_token }}"
+
+  tasks:
+    - name: Upload certified collections
+      ansible.hub.collection_upload:
+        api_url: "{{ hub_url }}/api/galaxy/"
+        token: "{{ api_token }}"
+        namespace: rh-certified
+        collections:
+          - name: redhat.rhel_system_roles
+            version: ">=1.95.7"
+          - name: ansible.posix
+            version: ">=2.1.0"
+          - name: ansible.eda
+            version: ">=2.8.1"
+          - name: ansible.hub
+            version: ">=1.0.0"
+          - name: ansible.controller
+            version: ">=4.6.16"
+          - name: ansible.platform
+            version: ">=2.5.0"
+          - name: zabbix.zabbix
+            version: ">=1.4.2"
+          - name: kubernetes.core
+            version: ">=6.0.0"
+
+    - name: Upload validated collections
+      ansible.hub.collection_upload:
+        api_url: "{{ hub_url }}/api/galaxy/"
+        token: "{{ api_token }}"
+        namespace: rh-validated
+        collections:
+          - name: infra.controller_configuration
+            version: ">=3.1.2"
+          - name: infra.ee_utilities
+            version: ">=4.0.4"
+
+    - name: Upload community collections
+      ansible.hub.collection_upload:
+        api_url: "{{ hub_url }}/api/galaxy/"
+        token: "{{ api_token }}"
+        namespace: community
+        collections:
+          - name: community.windows
+            version: ">=3.1.0"
