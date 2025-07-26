@@ -1,0 +1,5 @@
+-----BEGIN CERTIFICATE-----
+# Replace this placeholder with your actual CA bundle certificate
+# This file should contain the certificate chain for SSL validation
+# Multiple certificates can be concatenated in this file
+-----END CERTIFICATE-----

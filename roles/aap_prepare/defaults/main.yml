@@ -1,0 +1,35 @@
+---
+# defaults file for aap_prepare
+
+# SSL certificate management
+use_custom_certs: false
+
+# Installation control
+aap_setup_download_enabled: true
+
+# Default database settings (align with role documentation)
+aap_pg_port: '5432'
+aap_pg_database: 'awx'
+aap_pg_username: 'awx'
+aap_pg_sslmode: 'prefer'
+
+aap_hub_pg_port: '5432'
+aap_hub_pg_database: 'automationhub'
+aap_hub_pg_username: 'automationhub'
+aap_hub_pg_sslmode: 'prefer'
+
+aap_eda_pg_port: '5432'
+aap_eda_pg_database: 'automationedacontroller'
+aap_eda_pg_username: 'automationedacontroller'
+
+# Registry and network defaults
+aap_registry_url: 'registry.redhat.io'
+aap_receptor_port: 27199
+
+# Hub defaults
+aap_hub_require_approval: false
+aap_hub_enable_unauth: true
+aap_hub_ssl_validate: false
+
+# SSO default
+aap_sso_admin_password: ''

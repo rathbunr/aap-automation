@@ -1,7 +1,7 @@
 ---
 - name: Install AAP 2.5 Single Growth Node
-  hosts: localhost
-  connection: local
+  hosts: all
   become: true
   roles:
     - aap_prepare
+    - aap_install

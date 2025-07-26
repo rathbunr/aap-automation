@@ -1,0 +1,60 @@
+---
+aap_hostname: "{{ ansible_fqdn }}"
+bundle_dir: "/opt/aap/bundle"
+
+# Vault variables (set these as needed)
+vault_postgresql_admin_password: "your_db_password"
+vault_registry_username: "your_rh_username"
+vault_registry_password: "your_rh_password"
+vault_gateway_admin_password: "your_gateway_password"
+vault_controller_admin_password: "your_controller_password"
+vault_hub_admin_password: "your_hub_password"
+vault_eda_admin_password: "your_eda_password"
+vault_gateway_pg_password: "your_gateway_db_password"
+vault_controller_pg_password: "your_controller_db_password"
+vault_hub_pg_password: "your_hub_db_password"
+vault_eda_pg_password: "your_eda_db_password"
+
+aap_setup_prep_inv_nodes:
+  automationgateway:
+    "{{ aap_hostname }}":
+      ansible_connection: local
+  automationcontroller:
+    "{{ aap_hostname }}":
+      ansible_connection: local
+  automationhub:
+    "{{ aap_hostname }}":
+      ansible_connection: local
+  automationeda:
+    "{{ aap_hostname }}":
+      ansible_connection: local
+  database:
+    "{{ aap_hostname }}":
+      ansible_connection: local
+
+aap_setup_prep_inv_vars:
+  all:
+    postgresql_admin_username: postgres
+    postgresql_admin_password: "{{ vault_postgresql_admin_password }}"
+    redis_mode: standalone
+    bundle_install: true
+    bundle_dir: "{{ bundle_dir }}"
+    
+    registry_username: "{{ vault_registry_username }}"
+    registry_password: "{{ vault_registry_password }}"
+    
+    gateway_admin_password: "{{ vault_gateway_admin_password }}"
+    gateway_pg_host: "{{ aap_hostname }}"
+    gateway_pg_password: "{{ vault_gateway_pg_password }}"
+    
+    controller_admin_password: "{{ vault_controller_admin_password }}"
+    controller_pg_host: "{{ aap_hostname }}"
+    controller_pg_password: "{{ vault_controller_pg_password }}"
+    
+    hub_admin_password: "{{ vault_hub_admin_password }}"
+    hub_pg_host: "{{ aap_hostname }}"
+    hub_pg_password: "{{ vault_hub_pg_password }}"
+    
+    eda_admin_password: "{{ vault_eda_admin_password }}"
+    eda_pg_host: "{{ aap_hostname }}"
+    eda_pg_password: "{{ vault_eda_pg_password }}"
