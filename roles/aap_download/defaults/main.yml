@@ -1,0 +1,7 @@
+---
+# AAP download configuration
+aap_setup_down_version: "2.5"
+aap_setup_down_type: "containerized-setup"
+aap_setup_containerized: true
+aap_setup_rhel_version: 10
+aap_setup_arch: "x86_64"

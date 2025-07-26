@@ -3,5 +3,6 @@
   hosts: all
   become: true
   roles:
+    - aap_download
     - aap_prepare
-    - aap_install
+    - aap_setup

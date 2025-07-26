@@ -1,0 +1,4 @@
+---
+- name: Download AAP installer
+  include_role:
+    name: infra.aap_utilities.aap_setup_download
