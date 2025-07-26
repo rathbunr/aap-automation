@@ -1,0 +1,64 @@
+---
+- name: Copy SSL certificates
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - { src: "aap.crt", dest: "/etc/pki/tls/certs/aap.crt", mode: "0644" }
+    - { src: "aap.key", dest: "/etc/pki/tls/private/aap.key", mode: "0600" }
+    - { src: "ca-bundle.crt", dest: "/etc/pki/tls/certs/ca-bundle.crt", mode: "0644" }
+  when: use_custom_certs
+
+- name: Prepare AAP installation
+  include_role:
+    name: infra.aap_utilities.aap_setup_prepare
+  vars:
+    aap_setup_prep_containerized: true
+    aap_setup_prep_process_template: true
+    aap_setup_prep_inv_nodes:
+      automationcontroller:
+        "{{ inventory_hostname }}":
+      automationhub:
+        "{{ inventory_hostname }}":
+      automationedacontroller:
+        "{{ inventory_hostname }}":
+      database:
+        "{{ inventory_hostname }}":
+    aap_setup_prep_inv_vars:
+      automationcontroller:
+        node_type: hybrid
+      all:
+        ansible_user: "{{ ansible_user | default('ansible') }}"
+        ansible_become: true
+        admin_password: "{{ aap_admin_password }}"
+        pg_host: "{{ inventory_hostname }}"
+        pg_port: "{{ aap_pg_port }}"
+        pg_database: "{{ aap_pg_database }}"
+        pg_username: "{{ aap_pg_username }}"
+        pg_password: "{{ aap_pg_password }}"
+        pg_sslmode: "{{ aap_pg_sslmode }}"
+        registry_url: "{{ aap_registry_url }}"
+        receptor_listener_port: "{{ aap_receptor_port }}"
+        automationhub_admin_password: "{{ aap_hub_admin_password }}"
+        automationhub_pg_host: "{{ inventory_hostname }}"
+        automationhub_pg_port: "{{ aap_hub_pg_port }}"
+        automationhub_pg_database: "{{ aap_hub_pg_database }}"
+        automationhub_pg_username: "{{ aap_hub_pg_username }}"
+        automationhub_pg_password: "{{ aap_hub_pg_password }}"
+        automationhub_pg_sslmode: "{{ aap_hub_pg_sslmode }}"
+        automationhub_main_url: "{{ aap_hub_url }}"
+        automationhub_require_content_approval: "{{ aap_hub_require_approval }}"
+        automationhub_enable_unauthenticated_collection_access: "{{ aap_hub_enable_unauth }}"
+        automationhub_ssl_validate_certs: "{{ aap_hub_ssl_validate }}"
+        automationedacontroller_admin_password: "{{ aap_eda_admin_password }}"
+        automationedacontroller_pg_host: "{{ inventory_hostname }}"
+        automationedacontroller_pg_port: "{{ aap_eda_pg_port }}"
+        automationedacontroller_pg_database: "{{ aap_eda_pg_database }}"
+        automationedacontroller_pg_username: "{{ aap_eda_pg_username }}"
+        automationedacontroller_pg_password: "{{ aap_eda_pg_password }}"
+        sso_console_admin_password: "{{ aap_sso_admin_password }}"
+    aap_setup_prep_inv_secrets:
+      all:
+        registry_username: "{{ aap_registry_username }}"
+        registry_password: "{{ aap_registry_password }}"

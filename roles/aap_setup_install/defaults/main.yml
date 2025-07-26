@@ -1,0 +1,13 @@
+---
+# Installation configuration
+aap_setup_inst_inventory: "inventory"
+aap_setup_inst_extra_vars: {}
+aap_setup_inst_extra_vars_files: []
+aap_setup_inst_force: false
+aap_setup_inst_containerized: "{{ aap_setup_containerized | default(true) }}"
+
+# Controller connection settings for testing (optional)
+controller_validate_certs: false
+
+# Automation Hub connection settings for testing (optional)
+ah_validate_certs: false

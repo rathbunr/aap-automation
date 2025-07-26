@@ -1,6 +1,17 @@
-# AAP Prepare Role
+# AAP 2.5 Single Growth Node Installation
 
-This Ansible role prepares and installs Red Hat Ansible Automation Platform (AAP) 2.5 on a single growth node using containerized deployment.
+⚠️ **IMPORTANT: This project is currently untested and under development. Use at your own risk in non-production environments only.**
+
+This Ansible project provides a complete workflow to download, prepare, and install Red Hat Ansible Automation Platform (AAP) 2.5 on a single growth node using containerized deployment.
+
+## Project Structure
+
+```bash
+roles/
+├── aap_setup_download/     # Downloads AAP installer tarball
+├── aap_setup_prepare/      # Prepares installation and SSL certificates
+└── aap_setup_install/      # Executes the AAP installation
+```
 
 ## Requirements
 
@@ -8,12 +19,14 @@ This Ansible role prepares and installs Red Hat Ansible Automation Platform (AAP
 - Root access or sudo privileges
 - Valid Red Hat subscription with AAP entitlements
 - Red Hat Registry credentials
+- Red Hat API offline token (from <https://access.redhat.com/management/api/>)
 
-## Role Variables
-
-### Required Variables
+## Required Variables
 
 ```yaml
+# Red Hat API access
+aap_setup_down_offline_token: "your_offline_token"
+
 # AAP Component Admin Passwords
 aap_admin_password: "your_controller_admin_password"
 aap_hub_admin_password: "your_hub_admin_password"
@@ -32,19 +45,24 @@ aap_registry_password: "your_redhat_password"
 aap_hub_url: "https://hub.example.com"
 ```
 
-### Optional Variables
+## Optional Variables
 
 ```yaml
 # SSL Certificates (default: false)
 use_custom_certs: true
 
-# Skip installer download if already present (default: true)
-aap_setup_download_enabled: false
+# Download configuration
+aap_setup_down_version: "2.5"
+aap_setup_down_type: "containerized-setup"
+aap_setup_rhel_version: 8
+
+# Installation control
+aap_setup_inst_force: false
 ```
 
 ## SSL Certificate Management
 
-To use custom SSL certificates, place these files in `roles/aap_prepare/files/`:
+To use custom SSL certificates, place these files in `roles/aap_setup_prepare/files/`:
 
 - `aap.crt` - SSL certificate
 - `aap.key` - SSL private key  
@@ -54,69 +72,53 @@ Set `use_custom_certs: true` to enable.
 
 ## Usage
 
-```yaml
----
-- name: Install AAP 2.5
-  hosts: all
-  become: true
-  roles:
-    - aap_prepare
+Run the complete installation playbook:
+
+```bash
+ansible-playbook -i inventory playbook.yml
 ```
 
 ## Architecture
 
-Single growth node with all AAP components:
+Single growth node configuration with:
 
 - Automation Controller (hybrid node)
 - Automation Hub
 - Event-Driven Ansible
-- PostgreSQL Database
+- PostgreSQL Database (containerized)
 
 ## Dependencies
+
+This project wraps the following collection roles:
 
 - `infra.aap_utilities.aap_setup_download`
 - `infra.aap_utilities.aap_setup_prepare`
 - `infra.aap_utilities.aap_setup_install`
+
+Install the collection:
+
+```bash
+ansible-galaxy collection install infra.aap_utilities
+```
 
 ## Post-Installation Access
 
 - **Controller**: `https://<hostname>/`
 - **Hub**: `https://<hostname>/hub/`
 - **EDA**: `https://<hostname>/eda/`
----
-- name: Install AAP 2.5
-  hosts: all
-  become: true
-  roles:
-    - aap_prepare
-```
 
-### Example Extra Variables
+## Testing Status
 
-```yaml
----
-aap_admin_password: "MySecurePassword123!"
-aap_hub_admin_password: "MyHubPassword123!"
-aap_eda_admin_password: "MyEdaPassword123!"
-aap_pg_password: "MyDbPassword123!"
-aap_hub_pg_password: "MyHubDbPassword123!"
-aap_eda_pg_password: "MyEdaDbPassword123!"
-aap_registry_username: "myuser@redhat.com"
-aap_registry_password: "myregistrypassword"
-aap_hub_url: "https://hub.mycompany.com"
-use_custom_certs: false
-```
+⚠️ **This project has not been fully tested yet. Please:**
 
-## Architecture
+- Test in development environments first
+- Report issues via GitHub
+- Contribute improvements and bug fixes
+- Validate in your specific environment before production use
 
-This role configures a single growth node with:
+## Contributing
 
-- **Automation Controller**: Web UI and API for job orchestration
-- **Automation Hub**: Private content repository
-- **Event-Driven Ansible**: Event-driven automation
-- **PostgreSQL Database**: Shared database for all components
-
-## Dependencies
+This project is actively being developed. Contributions, testing feedback, and bug reports are welcome.
 
 - `infra.aap_utilities.aap_setup_download` - Downloads AAP installer
 - `infra.aap_utilities.aap_setup_prepare` - Prepares installation
