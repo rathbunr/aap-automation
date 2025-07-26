@@ -4,4 +4,4 @@
   connection: local
   become: true
   roles:
-    - aap-setup-prepare
+    - aap_prepare
