@@ -1,1 +1,20 @@
+---
+- name: Copy SSL certificates
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - { src: "aap.crt", dest: "/etc/pki/tls/certs/aap.crt", mode: "0644" }
+    - { src: "aap.key", dest: "/etc/pki/tls/private/aap.key", mode: "0600" }
+  when: use_custom_certs | default(false)
 
+- name: Install AAP using utilities collection
+  include_role:
+    name: infra.aap_utilities.aap_setup_prepare
+  vars:
+    aap_setup_prep_containerized: true
+
+- name: Run AAP installation
+  include_role:
+    name: infra.aap_utilities.aap_setup_install
